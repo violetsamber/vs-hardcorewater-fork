@@ -39,8 +39,18 @@ namespace HardcoreWater.ModBlock
 
             base.OnBlockRemoved(world, pos);
 
-            world.BlockAccessor.SetBlock(0, pos, BlockLayersAccess.Fluid);
-            world.BlockAccessor.TriggerNeighbourBlockUpdate(pos);
+            Block currentFluidBlock = world.BlockAccessor.GetBlock(pos, BlockLayersAccess.Fluid);
+            if (currentFluidBlock != null && currentFluidBlock.LiquidLevel != 7)
+            {
+                world.BlockAccessor.SetBlock(0, pos, BlockLayersAccess.Fluid);
+                world.BlockAccessor.TriggerNeighbourBlockUpdate(pos);
+                return;
+            }
+
+            // This preserves level 7 source blocks in aqueducts, so stuff like rapid source aren't lost
+            // if an aqueduct was placed on a source and the aqueduct is subsequently destroyed
+            world.BlockAccessor.SetBlock(currentFluidBlock.BlockId, pos, BlockLayersAccess.Fluid);
+
         }
 
 
@@ -99,7 +109,7 @@ namespace HardcoreWater.ModBlock
             }
             if (block.CanPlaceBlock(world, byPlayer, blockSel, ref failureCode))
             {
-                world.BlockAccessor.SetBlock(block.BlockId, blockSel.Position);
+                world.BlockAccessor.SetBlock(block.BlockId, blockSel.Position, BlockLayersAccess.Solid);
                 return true;
             }
             return false;
