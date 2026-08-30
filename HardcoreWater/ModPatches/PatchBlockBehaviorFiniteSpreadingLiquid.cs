@@ -57,16 +57,16 @@ namespace AdditionalSpawnConstraints.ModPatches
 
         [HarmonyPatch(typeof(BlockBehaviorFiniteSpreadingLiquid), "TryLoweringLiquidLevel")]
         [HarmonyPrefix]
-		static bool PrefixTryLoweringLiquidLevel(BlockBehaviorFiniteSpreadingLiquid __instance, ref bool __result, Block ourBlock, IWorldAccessor world, BlockPos pos)
+		static bool PrefixTryLoweringLiquidLevel(BlockBehaviorFiniteSpreadingLiquid __instance, ref bool __result, Block ourLiquid, IWorldAccessor world, BlockPos pos)
 		{
             Block ourSolid = world.BlockAccessor.GetBlock(pos, BlockLayersAccess.Solid);
 
             if (ourSolid is IAqueduct aqueduct)
             {
-                if (ourBlock.GetBlockEntity<BlockEntityAqueduct>(pos) is BlockEntityAqueduct blockEntityAqueduct)
+                if (ourLiquid.GetBlockEntity<BlockEntityAqueduct>(pos) is BlockEntityAqueduct blockEntityAqueduct)
                 {
                     // Add check to ignore liquid levels of 1, based on reports from Chronolegionnaire
-                    if (ourBlock.LiquidLevel != 1 && ourBlock.LiquidLevel-1 <= blockEntityAqueduct.WaterLevel && blockEntityAqueduct.HasWaterSource)
+                    if (ourLiquid.LiquidLevel != 1 && ourLiquid.LiquidLevel-1 <= blockEntityAqueduct.WaterLevel && blockEntityAqueduct.HasWaterSource)
                     {
                         __result = false;
                         return false; // skip original method
