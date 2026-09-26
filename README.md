@@ -4,8 +4,8 @@ Hardcore Water : Transport Edition
 Local Build Prerequisites
 --------
 
-* .NET SDK `8.0.125` (pinned via `global.json`)
-* Vintage Story `1.21.6`
+* .NET SDK `10.0` (pinned via `global.json`)
+* Vintage Story `1.22.7`
 * A valid game install path exposed via `VINTAGE_STORY`, or available at fallback path:
   * Linux/macOS fallback: `/home/dewet/Games/vintagestory`
   * Windows fallback: `C:\Program Files\Vintage Story`
